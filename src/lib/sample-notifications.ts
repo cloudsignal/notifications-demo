@@ -1,0 +1,53 @@
+// Notification templates — the API route adds `id` and `ts` before publishing.
+export const SAMPLES = {
+  orderShipped: {
+    type: "order.shipped",
+    title: "Order Shipped",
+    body: "Your order #1234 has been shipped and is on its way!",
+    icon: "\u{1F4E6}",
+    category: "orders",
+    action: { label: "Track Order", url: "/orders/1234" },
+  },
+  paymentReceived: {
+    type: "payment.received",
+    title: "Payment Received",
+    body: "We received your payment of $49.99",
+    icon: "\u{1F4B3}",
+    category: "payments",
+    action: { label: "View Receipt", url: "/payments/receipt-5678" },
+  },
+  paymentRefunded: {
+    type: "payment.refunded",
+    title: "Refund Processed",
+    body: "Your refund of $29.99 has been processed",
+    icon: "\u{1F4B0}",
+    category: "payments",
+    action: { label: "View Details", url: "/payments/refund-3456" },
+  },
+  teamMention: {
+    type: "team.mention",
+    title: "New Mention",
+    body: "@alex mentioned you in Project Alpha",
+    icon: "\u{1F4AC}",
+    category: "mentions",
+    sender: { name: "Alex Chen" },
+    action: { label: "View Message", url: "/messages/thread-91011" },
+  },
+  systemMaintenance: {
+    type: "system.maintenance",
+    title: "Scheduled Maintenance",
+    body: "Systems will be briefly unavailable tonight at 2:00 AM UTC",
+    icon: "\u{1F527}",
+    category: "system",
+    channel: "announcements",
+  },
+  flashSale: {
+    type: "promotion.sale",
+    title: "Flash Sale: 50% Off",
+    body: "Limited time offer on all premium plans!",
+    icon: "\u{1F389}",
+    category: "promotions",
+    channel: "promotions",
+    action: { label: "Shop Now", url: "/pricing" },
+  },
+} as const
