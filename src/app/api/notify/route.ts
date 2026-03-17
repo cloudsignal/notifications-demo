@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 import mqtt from 'mqtt'
 
 const MQTT_HOST = process.env.CLOUDSIGNAL_MQTT_HOST!
@@ -7,6 +9,25 @@ const ORG_ID = process.env.CLOUDSIGNAL_ORG_ID!
 
 export async function POST(request: NextRequest) {
   try {
+    // Verify Supabase session
+    const cookieStore = await cookies()
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
+      {
+        cookies: {
+          getAll() { return cookieStore.getAll() },
+          setAll(cookiesToSet: { name: string; value: string; options?: Record<string, unknown> }[]) {
+            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options as never))
+          },
+        },
+      },
+    )
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const { userId, notification, channel } = await request.json()
 
     if (!notification?.type || !notification?.title || !notification?.body) {
